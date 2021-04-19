@@ -92,7 +92,17 @@ Rename-Item beeminder_plus_one.zip beeminder_plus_one.plugin
 
 ```
 Data successfully submitted to Beeminder
-{'timestamp': 1618639201, 'value': 1.0, 'comment': 'submitted by Mnemosyne beeminder_plus_one.py', 'id': '607af7f255c133055e000000', 'updated_at': 1618671602, 'requestid': None, 'canonical': '17 1 "submitted by Mnemosyne beeminder_plus_one.py"', 'fulltext': '2021-Apr-17 entered at 00:00 on 2021-Apr-18  via api', 'origin': 'api', 'daystamp': '20210417', 'status': 'created'}
+{'timestamp': 1618639201,
+'value': 1.0,
+'comment': 'submitted by Mnemosyne beeminder_plus_one.py | card grade was 4',
+'id': '607af7f255c133055e000000',
+'updated_at': 1618671602,
+'requestid': None,
+'canonical': '17 1 "submitted by Mnemosyne beeminder_plus_one.py"',
+'fulltext': '2021-Apr-17 entered at 00:00 on 2021-Apr-18  via api',
+'origin': 'api',
+'daystamp': '20210417',
+'status': 'created'}
 ```
 
 
