@@ -60,7 +60,7 @@ class UpdateBeeminder(Hook):
     used_for = "after_repetition"
 
     def run(self, card):
-        if card.grade > 2:
+        if card.grade >= 2:
             submit(f"card grade was {card.grade}")
 
 
