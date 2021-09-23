@@ -2,6 +2,7 @@
 # beeminder_plus_one.py
 # Created on: Apr 17 2021
 # Created by: gojun077@gmail.com
+# Last Updated: Sep 23 2021
 #
 # Update a mnemosyne card tracking goal on Beeminder if a card is
 # graded as '2' or above. Based on after_repetition.py by
@@ -10,11 +11,13 @@
 
 import datetime
 import json
+import requests
 from mnemosyne.libmnemosyne.hook import Hook
 from mnemosyne.libmnemosyne.plugin import Plugin
 from mnemosyne.libmnemosyne.plugin import register_user_plugin
 from pathlib import Path
-import requests
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 
 
 def submit(comment_moar: str):
@@ -36,18 +39,28 @@ def submit(comment_moar: str):
                        "value": 1.0,
                        "comment": full_comment}
             header = {"Content-Type": "application/json"}
-            resp_post = requests.post(endpt, headers=header,
+
+            retry_strategy = Retry(
+                total = 3,
+                status_forcelist = [429, 500, 502, 503, 504],
+                method_whitelist = ["HEAD", "GET", "PUT", "DELETE", "OPTIONS",
+                                    "POST", "TRACE"],
+                backoff_factor = 2
+            )
+            adapter = HTTPAdapter(max_retries=retry_strategy)
+            sess = requests.Session()
+            sess.mount = ("https://", adapter)
+            resp_sess = sess.post(endpt, headers=header,
                                       data=json.dumps(payload))
-            if resp_post.status_code != 200:
-                print(f"HTTP Status: {resp_post.status_code}")
-                print(f"Error msg: {resp_post.text}")
-                raise Exception
-            else:
-                print("Data successfully submitted to Beeminder")
-                resp_data = resp_post.json()
-                print(resp_data)
-    except (IOError, ValueError, EOFError) as e:
-        print(e)
+            resp_sess.raise_for_status()
+            resp_data = resp_sess.json()
+            print(resp_data)
+    except requests.exceptiosn.ConnectionError as e:
+        print(f"ConnError: {e}, payload: {full_comment}")
+    except requests.exceptions.Timeout as e:
+        print(f"Conn TIMEOUT: {e}, payload: {full_comment}")
+    except requests.exceptions.HTTPError as e:
+        print(f"status code {resp_sess.status_code} from {url}: {e}, payload: {full_comment}")
     except:
         print("error occurred while trying to send data to Beeminder...")
 
