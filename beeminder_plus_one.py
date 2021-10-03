@@ -55,7 +55,7 @@ def submit(comment_moar: str):
             resp_sess.raise_for_status()
             resp_data = resp_sess.json()
             print(resp_data)
-    except requests.exceptiosn.ConnectionError as e:
+    except requests.exceptions.ConnectionError as e:
         print(f"ConnError: {e}, payload: {full_comment}")
     except requests.exceptions.Timeout as e:
         print(f"Conn TIMEOUT: {e}, payload: {full_comment}")
