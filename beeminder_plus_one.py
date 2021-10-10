@@ -2,7 +2,7 @@
 # beeminder_plus_one.py
 # Created on: Apr 17 2021
 # Created by: gojun077@gmail.com
-# Last Updated: Sep 23 2021
+# Last Updated: Oct 11 2021
 #
 # Update a mnemosyne card tracking goal on Beeminder if a card is
 # graded as '2' or above. Based on after_repetition.py by
@@ -74,7 +74,7 @@ class UpdateBeeminder(Hook):
 
     def run(self, card):
         if card.grade >= 2:
-            submit(f"card grade was {card.grade}")
+            submit(f"card grade was {card.grade}, fact_id: {card.fact._id}, tag: {card.tag_string()}")
 
 
 class AfterRepUpdBmndrPlugin(Plugin):
