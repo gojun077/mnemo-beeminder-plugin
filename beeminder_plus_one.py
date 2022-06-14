@@ -2,7 +2,7 @@
 # beeminder_plus_one.py
 # Created on: Apr 17 2021
 # Created by: gojun077@gmail.com
-# Last Updated: Oct 11 2021
+# Last Updated: Jun 12 2022
 #
 # Update a mnemosyne card tracking goal on Beeminder if a card is
 # graded as '2' or above. Based on after_repetition.py by
@@ -11,6 +11,7 @@
 
 import datetime
 import json
+import platform
 import requests
 from mnemosyne.libmnemosyne.hook import Hook
 from mnemosyne.libmnemosyne.plugin import Plugin
@@ -25,7 +26,13 @@ def submit(comment_moar: str):
     Increment Beeminder goal by +1.0 via the Beeminder API
     """
     try:
-        mnemo_cfg_path = str(Path.home()) + "/.config/mnemosyne"
+        mysys = platform.system()
+        if mysys == "Darwin":
+            mnemo_cfg_path = str(Path.home()) + "/Library/Mnemosyne"
+        elif mysys == "Linux":
+            mnemo_cfg_path = str(Path.home()) + "/.config/mnemosyne"
+        elif mysys == "Windows": # this branch needs to be tested
+            mnemo_cfg_path = str(Path.home()) + "\Application Data\Roaming\Mnemosyne"
         beeminder_info = mnemo_cfg_path + "/beeminder.json"
         with open(beeminder_info,"r") as f:
             bmndrD = json.load(f)
@@ -61,8 +68,8 @@ def submit(comment_moar: str):
         print(f"Conn TIMEOUT: {e}, payload: {full_comment}")
     except requests.exceptions.HTTPError as e:
         print(f"status code {resp_sess.status_code} from {url}: {e}, payload: {full_comment}")
-    except:
-        print("error occurred while trying to send data to Beeminder...")
+    except Exception as e:
+        print(f"error occurred while trying to send data to Beeminder: {e}")
 
 
 class UpdateBeeminder(Hook):
