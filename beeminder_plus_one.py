@@ -2,7 +2,7 @@
 # beeminder_plus_one.py
 # Created on: Apr 17 2021
 # Created by: gojun077@gmail.com
-# Last Updated: Jun 12 2022
+# Last Updated: Jun 16 2022
 #
 # Update a mnemosyne card tracking goal on Beeminder if a card is
 # graded as '2' or above. Based on after_repetition.py by
@@ -29,11 +29,13 @@ def submit(comment_moar: str):
         mysys = platform.system()
         if mysys == "Darwin":
             mnemo_cfg_path = str(Path.home()) + "/Library/Mnemosyne"
+            beeminder_info = mnemo_cfg_path + "/beeminder.json"
         elif mysys == "Linux":
             mnemo_cfg_path = str(Path.home()) + "/.config/mnemosyne"
+            beeminder_info = mnemo_cfg_path + "/beeminder.json"
         elif mysys == "Windows": # this branch needs to be tested
             mnemo_cfg_path = str(Path.home()) + "\Application Data\Roaming\Mnemosyne"
-        beeminder_info = mnemo_cfg_path + "/beeminder.json"
+            beeminder_info = mnemo_cfg_path + "\beeminder.json"
         with open(beeminder_info,"r") as f:
             bmndrD = json.load(f)
             url = "https://www.beeminder.com/api/v1/users"
